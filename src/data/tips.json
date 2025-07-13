@@ -1,0 +1,32 @@
+[
+  {
+    "id": "tip_001",
+    "text": "Concéntrate en una tarea a la vez.",
+    "collection": "Deep Work",
+    "rarity": "common"
+  },
+  {
+    "id": "tip_002",
+    "text": "Aplica la técnica Pomodoro cada mañana.",
+    "collection": "Pomodoro",
+    "rarity": "uncommon"
+  },
+  {
+    "id": "tip_003",
+    "text": "Elimina todas tus notificaciones por un día.",
+    "collection": "Digital Minimalism",
+    "rarity": "rare"
+  },
+  {
+    "id": "tip_004",
+    "text": "Haz 3 horas de trabajo profundo sin distracciones.",
+    "collection": "Deep Work",
+    "rarity": "super_rare"
+  },
+  {
+    "id": "tip_005",
+    "text": "Trabaja 7 días seguidos sin redes sociales.",
+    "collection": "Flow",
+    "rarity": "epic"
+  }
+]
