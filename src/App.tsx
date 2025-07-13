@@ -1,6 +1,10 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+
+import { useEffect, useState } from 'react';
+import { Preferences } from '@capacitor/preferences';
+
 import Home from './pages/Home';
 import WelcomeScreen from './pages/WelcomeScreen';
 
@@ -34,12 +38,47 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
+const STORAGE_KEYS = {
+  lastSeenDate: 'last_seen_date',
+  handledTipId: 'handled_tip_id',
+  unlockedCollections: 'unlocked_collections',
+  completedCollections: 'completed_collections',
+};
+//await Preferences.clear(); // Limpiar preferencias al iniciar
+
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <WelcomeScreen />
-  </IonApp>
-);
+const App: React.FC = () => {
+  const [showWelcome, setShowWelcome] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkIfSeenToday = async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
+
+      if (lastSeen === today) {
+        setShowWelcome(true); // Ya lo vio hoy
+      } else {
+        setShowWelcome(false); // Mostrar pantalla de bienvenida
+      }
+    };
+
+    checkIfSeenToday();
+  }, []);
+
+  if (showWelcome === null) return null; // puedes mostrar un IonLoading mientras carga
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+      <IonRouterOutlet>
+        <Route path="/welcome" component={WelcomeScreen} exact />
+        <Route path="/home" component={Home} exact />
+        <Redirect exact from="/" to={showWelcome ? "/welcome" : "/home"} />
+      </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
