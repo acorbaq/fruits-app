@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
 import Home from './pages/Home';
+import MainMenu from './pages/MainMenu';
 import WelcomeScreen from './pages/WelcomeScreen';
 
 /* Core CSS required for Ionic components to work properly */
@@ -73,8 +74,8 @@ const App: React.FC = () => {
       <IonReactRouter>
       <IonRouterOutlet>
         <Route path="/welcome" component={WelcomeScreen} exact />
-        <Route path="/home" component={Home} exact />
-        <Redirect exact from="/" to={showWelcome ? "/welcome" : "/home"} />
+        <Route path="/mainmenu" component={MainMenu} exact />
+        <Redirect exact from="/" to={showWelcome ? "/welcome" : "/mainmenu"} />
       </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

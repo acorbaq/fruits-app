@@ -263,7 +263,7 @@ const WelcomeScreen = () => {
       if (value === today) {
         console.log('Ya se vio hoy, redirigiendo a home...');
         setExpired(true);
-        window.location.replace('/home');
+        window.location.replace('/mainmenu'); // Redirigir a la pantalla de inicio
         return; // Detener el resto del efecto
       }
       // El resto del código se ejecuta solo si no se ha visto hoy
@@ -281,7 +281,7 @@ const WelcomeScreen = () => {
         key: 'last_seen_date',
         value: today,
       });
-      window.location.replace('/home');
+      window.location.replace('/mainmenu');
       }, 6000);
 
       return () => clearTimeout(timer);
@@ -302,7 +302,7 @@ const WelcomeScreen = () => {
         value: new Date().toISOString().slice(0, 10), // Formato YYYY-MM-DD
       });
       // Redirigir a la pantalla de inicio
-      window.location.replace('/home');
+      window.location.replace('/mainmenu');
     }, 6000);
 
     return () => clearTimeout(timer);
@@ -321,7 +321,7 @@ const WelcomeScreen = () => {
       unlockTip(tip);
     }
     setExpired(true);
-    window.location.replace('/home');
+    window.location.replace('/mainmenu'); // Redirigir a la pantalla de inicio
     // Aquí luego guardaremos y navegaremos
   };
 
