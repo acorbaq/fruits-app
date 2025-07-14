@@ -325,68 +325,28 @@ const WelcomeScreen = () => {
     // Aquí luego guardaremos y navegaremos
   };
 
-  return (
-    tip && !expired ? (
-      <IonPage>
-        <IonContent className="ion-padding" fullscreen>
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '20px',
-            }}
-          >
-            <IonText
-              color="dark"
-              style={{
-                fontSize: '24px',
-                cursor: 'pointer',
-                opacity: tip ? 1 : 0,
-                transition: 'opacity 1s ease-in',
-              }}
-              onClick={handleTap}
-              className={tip ? 'fade-in' : ''}
-            >
-              <p>“{tip.text}”</p>
-              <span
-                style={{
-                  display: 'block',
-                  marginTop: '8px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  color: 'var(--ion-color-' + getRarityColor(tip.rarity) + ')',
-                }}
-              >
-                {tip.collection}
-              </span>
-            </IonText>
-          </div>
-        </IonContent>
-      </IonPage>
-    ) : expired ? (
-      <IonPage>
-        <IonContent className="ion-padding" fullscreen>
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              padding: '20px',
-            }}
-          >
-            <IonText color="medium">
-              <p>Redirigiendo...</p>
-            </IonText>
-          </div>
-        </IonContent>
-      </IonPage>
-    ) : null
-  );
-};
+  return tip && !expired ? (
+  <IonPage>
+    <IonContent fullscreen className="tip-screen">
+      <div className="tip-container" onClick={handleTap}>
+        <IonText className="tip-text">
+          <p>“{tip.text}”</p>
+          <span className={`tip-collection ${tip.rarity}`}>{tip.collection}</span>
+        </IonText>
+      </div>
+    </IonContent>
+  </IonPage>
+) : expired ? (
+  <IonPage>
+    <IonContent fullscreen className="tip-screen">
+      <div className="tip-container">
+        <IonText color="medium">
+          <p>Redirigiendo...</p>
+        </IonText>
+      </div>
+    </IonContent>
+  </IonPage>
+) : null;
+}
 
 export default WelcomeScreen;
