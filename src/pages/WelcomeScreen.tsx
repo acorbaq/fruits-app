@@ -262,6 +262,7 @@ const WelcomeScreen = () => {
       const { value } = await Preferences.get({ key: 'last_seen_date' });
       if (value === today) {
         console.log('Ya se vio hoy, redirigiendo a home...');
+        setExpired(true);
         window.location.replace('/home');
         return; // Detener el resto del efecto
       }
@@ -325,49 +326,66 @@ const WelcomeScreen = () => {
   };
 
   return (
-    <IonPage>
-      <IonContent className="ion-padding" fullscreen>
-        <div
-          style={{
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            padding: '20px',
-          }}
-        >
-          {!expired ? (
-            tip && (
-              <>
-                <IonText
-                  color="dark"
-                  style={{ fontSize: '24px', cursor: 'pointer' }}
-                  onClick={handleTap}
-                >
-                  <p>“{tip.text}”</p>
-                  <span
-                    style={{
-                      display: 'block',
-                      marginTop: '8px',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      color: 'var(--ion-color-' + getRarityColor(tip.rarity) + ')',
-                    }}
-                  >
-                    {tip.collection}
-                  </span>
-                </IonText>
-              </>
-            )
-          ) : (
+    tip && !expired ? (
+      <IonPage>
+        <IonContent className="ion-padding" fullscreen>
+          <div
+            style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '20px',
+            }}
+          >
+            <IonText
+              color="dark"
+              style={{
+                fontSize: '24px',
+                cursor: 'pointer',
+                opacity: tip ? 1 : 0,
+                transition: 'opacity 1s ease-in',
+              }}
+              onClick={handleTap}
+              className={tip ? 'fade-in' : ''}
+            >
+              <p>“{tip.text}”</p>
+              <span
+                style={{
+                  display: 'block',
+                  marginTop: '8px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  color: 'var(--ion-color-' + getRarityColor(tip.rarity) + ')',
+                }}
+              >
+                {tip.collection}
+              </span>
+            </IonText>
+          </div>
+        </IonContent>
+      </IonPage>
+    ) : expired ? (
+      <IonPage>
+        <IonContent className="ion-padding" fullscreen>
+          <div
+            style={{
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              padding: '20px',
+            }}
+          >
             <IonText color="medium">
               <p>Redirigiendo...</p>
             </IonText>
-          )}
-        </div>
-      </IonContent>
-    </IonPage>
+          </div>
+        </IonContent>
+      </IonPage>
+    ) : null
   );
 };
 
