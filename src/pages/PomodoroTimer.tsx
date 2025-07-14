@@ -52,44 +52,50 @@ const PomodoroTimer: React.FC = () => {
                 setPlan(parsed);
                 setTimeLeft(parsed[0]?.duration ? parsed[0].duration * 60 : 0);
             } catch {
-                history.replace('/main');
+                history.replace('/mainmenu');
             }
         } else {
-            history.replace('/main');
+            history.replace('/mainmenu');
         }
     }, [history]);
 
     // Actualizar tiempo y progreso
     useEffect(() => {
-        if (!isRunning || timeLeft <= 0) return;
+    if (!isRunning) return;
 
-        intervalRef.current = setInterval(() => {
+    intervalRef.current = setInterval(() => {
         setTimeLeft((prev) => {
-            const newTime = prev - 1;
+        const newTime = prev - 1;
 
-            // Añadir bloque solo cuando el segundo es 0 (inicio de un nuevo minuto)
-            if (newTime >= 0 && newTime % 60 === 0 && newTime !== 0) {
-            setProgressBlocks((blocks) => [
-                ...blocks,
-                {
-                sessionType: currentSessionType!,
-                minuteIndex: blocks.length + 1,
-                },
-            ]);
-            }
-
-            if (newTime <= 0) {
-            clearInterval(intervalRef.current!);
-            handleNext();
-            return 0;
-            }
-
-            return newTime;
+        // Mover esta lógica fuera para evitar doble render (ver siguiente paso)
+        return newTime;
         });
-        }, 1000);
+    }, 1000);
 
-        return () => clearInterval(intervalRef.current!);
-    }, [isRunning, currentSessionType, timeLeft]);
+    return () => clearInterval(intervalRef.current!);
+    }, [isRunning]);
+
+    const previousMinuteRef = useRef<number>(-1);
+
+    useEffect(() => {
+    if (timeLeft > 0 && timeLeft % 60 === 0) {
+        const currentMinute = Math.floor(timeLeft / 60);
+
+        // Solo registrar si el minuto actual es diferente al último registrado
+        if (previousMinuteRef.current !== currentMinute) {
+        previousMinuteRef.current = currentMinute;
+
+        setProgressBlocks((blocks) => [
+            ...blocks,
+            {
+            sessionType: currentSessionType!,
+            minuteIndex: blocks.length + 1,
+            },
+        ]);
+        }
+    }
+    }, [timeLeft, currentSessionType]);
+
 
     // Formatear tiempo mm:ss
     const formatTime = (seconds: number): string =>
@@ -97,16 +103,18 @@ const PomodoroTimer: React.FC = () => {
 
     // Avanzar a la siguiente sesión
     const handleNext = useCallback(() => {
+
         const nextIndex = currentIndex + 1;
         if (nextIndex >= plan.length) {
             alert('🎉 ¡Plan Pomodoro completado!');
-            history.replace('/main');
+            history.replace('/mainmenu');
             return;
         }
+
+        previousMinuteRef.current = -1; // resetear el contador de minuto
         setCurrentIndex(nextIndex);
         setTimeLeft(plan[nextIndex].duration * 60);
         setIsRunning(true);
-        setProgressBlocks([]);
     }, [currentIndex, plan, history]);
 
     // Pausar/iniciar timer
