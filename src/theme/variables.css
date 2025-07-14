@@ -1,2 +1,202 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+:root {
+    --ion-color-primary: #5cacee;
+    --ion-color-medium: #a0a0a0;
+    --ion-color-dark: #181818;
+    --ion-background-color: #101010;
+    --ion-surface-color: #181818;
+    --ion-text-color: #f5f5f5;
+    --ion-font-family: 'Inter', system-ui, sans-serif;
+    --border-radius: 10px;
+    --border-color: #232323;
+    --transition-fast: 0.18s cubic-bezier(.4,0,.2,1);
+}
+
+body, html {
+    background: var(--ion-background-color);
+    color: var(--ion-text-color);
+    font-family: var(--ion-font-family);
+    margin: 0;
+    padding: 0;
+}
+
+ion-card {
+    box-shadow: none;
+    border-radius: var(--border-radius);
+    background: var(--ion-surface-color);
+    color: var(--ion-text-color);
+    border: 1px solid var(--border-color);
+    transition: background var(--transition-fast);
+}
+
+ion-card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--ion-color-primary);
+}
+
+ion-toolbar {
+    --background: var(--ion-color-dark);
+    --color: var(--ion-text-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+ion-content {
+    --background: var(--ion-background-color);
+}
+
+.tip-card {
+    background: var(--ion-surface-color);
+    color: #ededed;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+
+    &:hover {
+        background: #222;
+        border-color: var(--ion-color-primary);
+    }
+
+    &.border-common { border-color: #a0a0a0; }
+    &.border-uncommon { border-color: #5cacee; }
+    &.border-rare { border-color: #7e57c2; }
+    &.border-super_rare { border-color: #ff9800; }
+    &.border-epic { border-color: #e91e63; }
+
+    .tip-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #eaeaea;
+        margin-bottom: 0.5em;
+    }
+
+    .rarity-label {
+        font-size: 0.8rem;
+        color: var(--ion-color-medium);
+        opacity: 0.8;
+    }
+
+    .locked-tip {
+        font-style: italic;
+        color: var(--ion-color-medium);
+        opacity: 0.7;
+    }
+}
+
+.tip-screen {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+    font-family: var(--ion-font-family);
+}
+
+.tip-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity var(--transition-fast);
+}
+
+.tip-text {
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #eaeaea;
+    transition: opacity var(--transition-fast);
+}
+
+.tip-text p {
+    margin: 0;
+}
+
+.tip-collection {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.7;
+    letter-spacing: 0.01em;
+}
+
+.tip-collection.common {
+    color: #a0a0a0;
+}
+.tip-collection.uncommon {
+    color: #5cacee;
+}
+.tip-collection.rare {
+    color: #7e57c2;
+}
+.tip-collection.super_rare {
+    color: #ff9800;
+}
+.tip-collection.epic {
+    color: #e91e63;
+}
+
+.main-menu {
+    --background: var(--ion-background-color);
+    color: var(--ion-text-color);
+    font-family: var(--ion-font-family);
+    padding-top: 8vh;
+}
+
+.technique-title h1 {
+    text-align: center;
+    font-size: 1.35rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: #eaeaea;
+    letter-spacing: 0.01em;
+}
+
+.technique-card {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 28px 14px;
+    margin: 8px 0;
+    text-align: center;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--ion-surface-color);
+        border-color: var(--ion-color-primary);
+    }
+
+    .technique-emoji {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .technique-name {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #d8d8d8;
+        letter-spacing: 0.01em;
+    }
+}
+
+.menu-button {
+    --color: var(--ion-color-primary);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border: 1px solid var(--ion-color-primary);
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: transparent;
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    &:hover {
+        background: var(--ion-color-primary);
+        color: #fff;
+    }
+}
