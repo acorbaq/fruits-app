@@ -1,14 +1,20 @@
 :root {
     --ion-color-primary: #5cacee;
+    --ion-color-secondary: #7ab38c;
+    --ion-color-tertiary: #7e57c2;
+    --ion-color-warning: #ff9800;
+    --ion-color-danger: #e91e63;
     --ion-color-medium: #a0a0a0;
     --ion-color-dark: #181818;
     --ion-background-color: #101010;
     --ion-surface-color: #181818;
     --ion-text-color: #f5f5f5;
+    --ion-muted-text: #aaa;
     --ion-font-family: 'Inter', system-ui, sans-serif;
     --border-radius: 10px;
     --border-color: #232323;
     --transition-fast: 0.18s cubic-bezier(.4,0,.2,1);
+    --progress-bg: #333;
 }
 
 body, html {
@@ -47,7 +53,7 @@ ion-content {
 
 .tip-card {
     background: var(--ion-surface-color);
-    color: #ededed;
+    color: var(--ion-text-color);
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     transition: background var(--transition-fast), border-color var(--transition-fast);
@@ -57,16 +63,16 @@ ion-content {
         border-color: var(--ion-color-primary);
     }
 
-    &.border-common { border-color: #a0a0a0; }
-    &.border-uncommon { border-color: #5cacee; }
-    &.border-rare { border-color: #7e57c2; }
-    &.border-super_rare { border-color: #ff9800; }
-    &.border-epic { border-color: #e91e63; }
+    &.border-common { border-color: var(--ion-color-medium); }
+    &.border-uncommon { border-color: var(--ion-color-primary); }
+    &.border-rare { border-color: var(--ion-color-tertiary); }
+    &.border-super_rare { border-color: var(--ion-color-warning); }
+    &.border-epic { border-color: var(--ion-color-danger); }
 
     .tip-text {
         font-size: 1rem;
         font-weight: 500;
-        color: #eaeaea;
+        color: var(--ion-text-color);
         margin-bottom: 0.5em;
     }
 
@@ -105,7 +111,7 @@ ion-content {
     font-size: 1.4rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #eaeaea;
+    color: var(--ion-text-color);
     transition: opacity var(--transition-fast);
 }
 
@@ -123,19 +129,19 @@ ion-content {
 }
 
 .tip-collection.common {
-    color: #a0a0a0;
+    color: var(--ion-color-medium);
 }
 .tip-collection.uncommon {
-    color: #5cacee;
+    color: var(--ion-color-primary);
 }
 .tip-collection.rare {
-    color: #7e57c2;
+    color: var(--ion-color-tertiary);
 }
 .tip-collection.super_rare {
-    color: #ff9800;
+    color: var(--ion-color-warning);
 }
 .tip-collection.epic {
-    color: #e91e63;
+    color: var(--ion-color-danger);
 }
 
 .main-menu {
@@ -150,7 +156,7 @@ ion-content {
     font-size: 1.35rem;
     font-weight: 500;
     margin-bottom: 1.5rem;
-    color: #eaeaea;
+    color: var(--ion-text-color);
     letter-spacing: 0.01em;
 }
 
@@ -178,7 +184,7 @@ ion-content {
     .technique-name {
         font-size: 1rem;
         font-weight: 400;
-        color: #d8d8d8;
+        color: var(--ion-text-color);
         letter-spacing: 0.01em;
     }
 }
@@ -200,10 +206,11 @@ ion-content {
         color: #fff;
     }
 }
+
 .pomodoro-setup-screen {
-  --background: #0e0e0e;
-  color: #ffffff;
-  font-family: 'Inter', system-ui, sans-serif;
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  font-family: var(--ion-font-family);
 }
 
 .setup-container {
@@ -219,46 +226,134 @@ ion-content {
   font-size: 1.8rem;
   font-weight: 500;
   margin-bottom: 1rem;
-  color: #eaeaea;
+  color: var(--ion-text-color);
 }
 
 .setup-description p {
   font-size: 1rem;
-  color: #aaa;
+  color: var(--ion-muted-text);
   margin-bottom: 2rem;
   line-height: 1.5;
 }
 
 .time-inputs {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 1.5rem;
 }
 
 .time-input {
-  flex: 1;
-  max-width: 120px;
+    flex: 1;
+    min-width: 80px;
+    max-width: 120px;
 
-  ion-label {
-    color: #ccc;
-    font-size: 0.8rem;
-  }
+    ion-label {
+        color: var(--ion-color-medium);
+        font-size: 0.8rem;
+    }
 
-  ion-input {
-    border-bottom: 1px solid #444;
-    color: #fff;
-    font-size: 1.2rem;
-    padding: 6px 0;
-    --padding-start: 0;
-    --background: transparent;
-  }
+    ion-input {
+        border-bottom: 1px solid var(--border-color);
+        color: var(--ion-text-color);
+        font-size: 1.2rem;
+        padding: 6px 0;
+        --padding-start: 0;
+        --background: transparent;
+    }
+}
+
+.minute-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 8px;
 }
 
 .start-button {
   margin-top: 1.5rem;
-  --background: #5cacee;
+  --background: var(--ion-color-primary);
   --color: #fff;
   font-weight: 500;
   letter-spacing: 0.03em;
+}
+
+.pomodoro-timer-screen {
+  --background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  font-family: var(--ion-font-family);
+}
+
+.timer-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.session-label h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--ion-color-medium);
+  margin-bottom: 1rem;
+}
+
+.timer-display h1 {
+  font-size: 4.5rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ion-text-color);
+}
+
+.timer-controls {
+  display: flex;
+  gap: 16px;
+  margin-top: 2rem;
+}
+
+.control-button {
+  --color: var(--ion-color-primary);
+  font-size: 1rem;
+  border: 1px solid var(--ion-color-primary);
+  padding: 8px 18px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.control-button.secondary {
+  --color: var(--ion-color-medium);
+  border-color: var(--border-color);
+}
+
+/* 🔲 Bloques visuales de progreso */
+.progress-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: left;
+  margin-top: 32px;
+  max-width: 80%;
+}
+
+.progress-block {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--progress-bg);
+  opacity: 0.7;
+  transition: background 0.3s ease;
+
+  &.work {
+    background-color: var(--ion-color-primary);
+  }
+
+  &.break {
+    background-color: var(--ion-color-tertiary);
+  }
+  &.long_break {
+    background-color: var(--ion-color-warning);
+  }
 }
