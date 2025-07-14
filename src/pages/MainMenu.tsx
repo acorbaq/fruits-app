@@ -43,7 +43,7 @@ const MainMenu: React.FC = () => {
     }, [history]);
 
   const handleTechniqueSelect = (technique: string) => {
-    history.push(`/technique/${technique}`); // ej: /technique/pomodoro
+    history.replace(`/technique/${technique}`); // ej: /technique/pomodoro
   };
 
   return (
