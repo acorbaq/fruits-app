@@ -8,6 +8,7 @@ import { Preferences } from '@capacitor/preferences';
 import Home from './pages/Home';
 import MainMenu from './pages/MainMenu';
 import WelcomeScreen from './pages/WelcomeScreen';
+import CollectionsPage from './pages/CollectionsPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -75,6 +76,7 @@ const App: React.FC = () => {
       <IonRouterOutlet>
         <Route path="/welcome" component={WelcomeScreen} exact />
         <Route path="/mainmenu" component={MainMenu} exact />
+        <Route path="/collections" component={CollectionsPage} exact />
         <Redirect exact from="/" to={showWelcome ? "/welcome" : "/mainmenu"} />
       </IonRouterOutlet>
       </IonReactRouter>
