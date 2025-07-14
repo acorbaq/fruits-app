@@ -10,6 +10,7 @@ import MainMenu from './pages/MainMenu';
 import WelcomeScreen from './pages/WelcomeScreen';
 import CollectionsPage from './pages/CollectionsPage';
 import PomodoroSetup from './pages/PomodoroSetup';
+import PomodoroTimer from './pages/PomodoroTimer';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -79,6 +80,7 @@ const App: React.FC = () => {
         <Route path="/mainmenu" component={MainMenu} exact />
         <Route path="/collections" component={CollectionsPage} exact />
         <Route path="/technique/pomodoro" component={PomodoroSetup} exact />
+        <Route path="/timer" component={PomodoroTimer} exact />
         <Redirect exact from="/" to={showWelcome ? "/welcome" : "/mainmenu"} />
       </IonRouterOutlet>
       </IonReactRouter>
