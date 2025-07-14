@@ -9,8 +9,11 @@ import Home from './pages/Home';
 import MainMenu from './pages/MainMenu';
 import WelcomeScreen from './pages/WelcomeScreen';
 import CollectionsPage from './pages/CollectionsPage';
+import Stats from './pages/Stats';
 import PomodoroSetup from './pages/PomodoroSetup';
 import PomodoroTimer from './pages/PomodoroTimer';
+
+import { getLocalIsoDate } from './utils/date';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -57,7 +60,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const checkIfSeenToday = async () => {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = getLocalIsoDate();
       const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
 
       if (lastSeen === today) {
@@ -79,6 +82,7 @@ const App: React.FC = () => {
         <Route path="/welcome" component={WelcomeScreen} exact />
         <Route path="/mainmenu" component={MainMenu} exact />
         <Route path="/collections" component={CollectionsPage} exact />
+        <Route path="/stats" component={Stats} exact />
         <Route path="/technique/pomodoro" component={PomodoroSetup} exact />
         <Route path="/timer" component={PomodoroTimer} exact />
         <Redirect exact from="/" to={showWelcome ? "/welcome" : "/mainmenu"} />

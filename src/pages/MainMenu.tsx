@@ -14,6 +14,7 @@ import {
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { pieChart, book } from 'ionicons/icons';
+import { getLocalIsoDate } from '../utils/date';
 
 import { Preferences } from '@capacitor/preferences';
 
@@ -21,8 +22,9 @@ import { Preferences } from '@capacitor/preferences';
 const STORAGE_KEYS = {
   lastSeenDate: 'last_seen_date',
 };
+
 const isToday = async () => {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = getLocalIsoDate();
   const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
   return lastSeen === today;
 }

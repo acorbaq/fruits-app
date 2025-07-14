@@ -6,6 +6,9 @@ import {
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
+
+import { getLocalIsoDate } from '../utils/date';
+
 import tips from '../data/tips.json'; // Asegúrate de tener un archivo JSON con las frases
 
 type Rarity = 'common' | 'uncommon' | 'rare' | 'super_rare' | 'epic';
@@ -258,7 +261,7 @@ const WelcomeScreen = () => {
   useEffect(() => {
     // Antes de mostrar nada si last_seen_date es hoy nos movemos a home
     (async () => {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = getLocalIsoDate();
       const { value } = await Preferences.get({ key: 'last_seen_date' });
       if (value === today) {
         console.log('Ya se vio hoy, redirigiendo a home...');
@@ -299,7 +302,7 @@ const WelcomeScreen = () => {
       // Asignar fecha de hoy como última vista capacitor/preferences STORAGE_KEYS.lastSeenDate 
       Preferences.set({
         key: 'last_seen_date',
-        value: new Date().toISOString().slice(0, 10), // Formato YYYY-MM-DD
+        value: getLocalIsoDate(), // Formato YYYY-MM-DD
       });
       // Redirigir a la pantalla de inicio
       window.location.replace('/mainmenu');
@@ -314,7 +317,7 @@ const WelcomeScreen = () => {
     // Asignar fecha de hoy como última vista capacitor/preferences STORAGE_KEYS.lastSeenDate 
     Preferences.set({
       key: 'last_seen_date',
-      value: new Date().toISOString().slice(0, 10), // Formato YYYY-MM-DD
+      value: getLocalIsoDate(), // Formato YYYY-MM-DD
     });
     // Guardar el ID de la frase manejada
     if (tip) {
