@@ -11,11 +11,36 @@ import {
   IonCardContent,
   IonIcon,
 } from '@ionic/react';
+import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { pieChart, book } from 'ionicons/icons';
 
+import { Preferences } from '@capacitor/preferences';
+
+// Verificar si la fecha last_seen_date es de hoy
+const STORAGE_KEYS = {
+  lastSeenDate: 'last_seen_date',
+};
+const isToday = async () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
+  return lastSeen === today;
+}
+
+
+
+
 const MainMenu: React.FC = () => {
   const history = useHistory();
+  // Si la fecha guardada no es de hoy regresa a la pantalla de bienvenida
+    useEffect(() => {
+        const checkLastSeen = async () => {
+        if (!(await isToday())) {
+            history.replace('/welcome');
+        }
+        };
+        checkLastSeen();
+    }, [history]);
 
   const handleTechniqueSelect = (technique: string) => {
     history.push(`/technique/${technique}`); // ej: /technique/pomodoro
@@ -23,44 +48,45 @@ const MainMenu: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding">
+    <IonContent fullscreen className="main-menu">
+        <div className="technique-title">
         <IonText>
-          <h1 style={{ textAlign: 'center' }}>Selecciona tu Técnica</h1>
+            <h1>Selecciona tu Técnica</h1>
         </IonText>
+        </div>
 
         <IonGrid>
-          <IonRow class="ion-justify-content-center ion-padding-top">
-            <IonCol size="12" size-md="6">
-              <IonCard button onClick={() => handleTechniqueSelect('pomodoro')}>
-                <IonCardContent className="ion-text-center">
-                  <span role="img" aria-label="Pomodoro" style={{ fontSize: '48px' }}>🍅</span>
-                  <h2>Pomodoro Clásico</h2>
-                </IonCardContent>
-              </IonCard>
+        <IonRow class="ion-justify-content-center">
+            {[
+            { name: 'Pomodoro Clásico', emoji: '🍅', key: 'pomodoro' },
+            { name: 'Flowtime', emoji: '🍌', key: 'flowtime' },
+            // Agrega más técnicas aquí
+            ].map((technique) => (
+            <IonCol size="6" size-md="4" key={technique.key}>
+                <div className="technique-card" onClick={() => handleTechniqueSelect(technique.key)}>
+                <span className="technique-emoji">{technique.emoji}</span>
+                <span className="technique-name">{technique.name}</span>
+                </div>
             </IonCol>
+            ))}
+        </IonRow>
 
-            <IonCol size="12" size-md="6">
-              <IonCard button onClick={() => handleTechniqueSelect('flowtime')}>
-                <IonCardContent className="ion-text-center">
-                  <span role="img" aria-label="Flowtime" style={{ fontSize: '48px' }}>🍌</span>
-                  <h2>Flowtime</h2>
-                </IonCardContent>
-              </IonCard>
+        <IonRow class="ion-justify-content-around ion-padding-top">
+            <IonCol size="auto">
+            <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/collections')}>
+                <IonIcon icon={book} slot="start" />
+                Colecciones
+            </IonButton>
             </IonCol>
-          </IonRow>
-
-          <IonRow class="ion-justify-content-around ion-padding">
-            <IonButton fill="outline" onClick={() => history.push('/collections')}>
-              <IonIcon icon={book} slot="start" />
-              Colecciones
+            <IonCol size="auto">
+            <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/stats')}>
+                <IonIcon icon={pieChart} slot="start" />
+                Estadísticas
             </IonButton>
-            <IonButton fill="outline" onClick={() => history.push('/stats')}>
-              <IonIcon icon={pieChart} slot="start" />
-              Estadísticas
-            </IonButton>
-          </IonRow>
+            </IonCol>
+        </IonRow>
         </IonGrid>
-      </IonContent>
+    </IonContent>
     </IonPage>
   );
 };
