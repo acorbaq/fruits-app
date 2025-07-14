@@ -59,14 +59,63 @@ const rarityWeights: Record<Rarity, number> = {
   epic: 1,
 };
 
-function getWeightedRandomTip(tips: Tip[]): Tip {
+async function getWeightedRandomTip(tips: Tip[]): Promise<Tip> {
+  // Verifica si todas las frases están desbloqueadas
+  const allUnlocked = await areAllTipsUnlocked();
+  console.log('Todas las frases desbloqueadas:', allUnlocked);
+  if (allUnlocked) {
+    // Si todas las frases están desbloqueadas, muestra una aleatoria sin peso
+    const randomIndex = Math.floor(Math.random() * tips.length);
+    return tips[randomIndex];
+  }
+
+  // Obtiene los IDs de frases ya desbloqueadas
+  const handledIds = await getHandledTipIds();
+  console.log('IDs de frases desbloqueadas:', handledIds);
+  // Filtra las frases no manejadas
+  const availableTips = tips.filter(tip => !handledIds.includes(tip.id));
+  console.log('Frases disponibles:', availableTips.length);
+
+  // Si no hay frases disponibles, muestra una aleatoria de todas
+  if (availableTips.length === 0) {
+    const randomIndex = Math.floor(Math.random() * tips.length);
+    return tips[randomIndex];
+  }
+
+  // Aplica pesos a las frases disponibles
   const weightedTips: Tip[] = [];
-  tips.forEach(tip => {
+  availableTips.forEach(tip => {
     const weight = rarityWeights[tip.rarity] || 1;
     for (let i = 0; i < weight; i++) {
       weightedTips.push(tip);
     }
   });
+  console.log('Frases con peso:', weightedTips.length);
+
+  // 40% de probabilidad de mostrar una frase de una colección desbloqueada
+  if (Math.random() < 0.4) {
+    const unlockedCollections = await getUnlockedCollections();
+    const completedCollections = await getCompletedCollections();
+    console.log('Colecciones desbloqueadas:', unlockedCollections);
+    console.log('Colecciones completadas:', completedCollections);
+    // Filtra colecciones desbloqueadas pero no completadas
+    const eligibleCollections = unlockedCollections.filter(
+      col => !completedCollections.includes(col)
+    );
+    if (eligibleCollections.length > 0) {
+      const randomCollection =
+        eligibleCollections[Math.floor(Math.random() * eligibleCollections.length)];
+      const collectionTips = weightedTips.filter(
+        tip => tip.collection === randomCollection
+      );
+      if (collectionTips.length > 0) {
+        const randomIndex = Math.floor(Math.random() * collectionTips.length);
+        return collectionTips[randomIndex];
+      }
+    }
+  }
+
+  // Si no se cumple la condición anterior, muestra una frase aleatoria por peso
   const randomIndex = Math.floor(Math.random() * weightedTips.length);
   return weightedTips[randomIndex];
 }
@@ -104,6 +153,12 @@ async function getHandledTipIds(): Promise<string[]> {
     }
   }
   return [];
+}
+
+// Verificar si se han desbloquedo todas las frases
+async function areAllTipsUnlocked(): Promise<boolean> {
+  const handledIds = await getHandledTipIds();
+  return handledIds.length === tips.length;
 }
 
 // Funcion para guardar la colección desbloqueada
@@ -177,6 +232,19 @@ async function saveCompletedCollection(collection: string) {
   }
 }
 
+// Funcion para obtener las colecciones completadas
+async function getCompletedCollections(): Promise<string[]> {
+  const { value } = await Preferences.get({ key: 'completed_collections' });
+  if (value) {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 export async function unlockTip(tip: Tip) {
   await saveHandledTipId(tip.id);
   await saveUnlockedCollection(tip.collection);
@@ -188,8 +256,41 @@ const WelcomeScreen = () => {
   const [tip, setTip] = useState<Tip | null>(null);
 
   useEffect(() => {
-    const selectedTip = getWeightedRandomTip(tips);
-    setTip(selectedTip);
+    // Antes de mostrar nada si last_seen_date es hoy nos movemos a home
+    (async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const { value } = await Preferences.get({ key: 'last_seen_date' });
+      if (value === today) {
+        console.log('Ya se vio hoy, redirigiendo a home...');
+        window.location.replace('/home');
+        return; // Detener el resto del efecto
+      }
+      // El resto del código se ejecuta solo si no se ha visto hoy
+      const fetchTip = async () => {
+      const selectedTip = await getWeightedRandomTip(tips);
+      setTip(selectedTip);
+      console.log('Frase seleccionada:', selectedTip);
+      };
+      fetchTip();
+
+      const timer = setTimeout(() => {
+      console.log('⏳ Tiempo agotado, ir a la siguiente pantalla...');
+      setExpired(true);
+      Preferences.set({
+        key: 'last_seen_date',
+        value: today,
+      });
+      window.location.replace('/home');
+      }, 6000);
+
+      return () => clearTimeout(timer);
+    })();
+    const fetchTip = async () => {
+      const selectedTip = await getWeightedRandomTip(tips);
+      setTip(selectedTip);
+      console.log('Frase seleccionada:', selectedTip);
+    };
+    fetchTip();
 
     const timer = setTimeout(() => {
       console.log('⏳ Tiempo agotado, ir a la siguiente pantalla...');
