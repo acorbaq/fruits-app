@@ -68,4 +68,25 @@ export class TipManager {
     const randomIndex = Math.floor(Math.random() * weightedTips.length);
     return weightedTips[randomIndex];
   }
+
+    async getCollectionsGrouped(): Promise<Record<string, { unlocked: Tip[]; locked: Tip[] }>> {
+    const unlockedIds = await this.getHandledTipIds();
+    const allTips = this.tipService.getAllTips();
+    const grouped: Record<string, { unlocked: Tip[]; locked: Tip[] }> = {};
+    allTips.forEach((tip) => {
+      const isUnlocked = unlockedIds.includes(tip.id);
+      const collection = tip.collection ?? '';
+      if (!grouped[collection]) {
+        grouped[collection] = { unlocked: [], locked: [] };
+      }
+      grouped[collection][isUnlocked ? 'unlocked' : 'locked'].push(tip);
+    });
+    // Opcional: filtra colecciones sin tips desbloqueados y ordena
+    const filtered = Object.fromEntries(
+      Object.entries(grouped)
+        .filter(([, group]) => group.unlocked.length > 0)
+        .sort(([a], [b]) => a.localeCompare(b))
+    );
+    return filtered;
+  }
 }

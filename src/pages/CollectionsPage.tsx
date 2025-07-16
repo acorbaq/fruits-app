@@ -20,14 +20,14 @@ import { useEffect, useState } from 'react';
 import { documentText } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 
-import { getRarityColor, getRarityLabel, getRarityBorderClass } from '../utils/tips';
-import { Tip, Rarity } from '../models/Tip';
+import { getRarityBorderClass } from '../utils/tips';
+import { Tip } from '../models/Tip';
 import { TipService } from '../services/TipService';
+import { TipManager } from '../services/TipManager';
 
 import tipsData from '../data/tips.json';
-import { Preferences } from '@capacitor/preferences';
 
-// Utiliza el modelo Tip para inicializar los datos
+// Inicializa servicios
 const initialTips: Tip[] = tipsData.map(tip => ({
   id: tip.id,
   title: tip.title ?? tip.text,
@@ -36,45 +36,23 @@ const initialTips: Tip[] = tipsData.map(tip => ({
   unlocked: false,
   collection: tip.collection,
 }));
-
 const tipService = new TipService(initialTips);
-
-async function getUnlockedTipIds(): Promise<string[]> {
-  const { value } = await Preferences.get({ key: 'handled_tip_id' });
-  return value ? JSON.parse(value) : [];
-}
+const tipManager = new TipManager(tipService);
 
 const CollectionsPage: React.FC = () => {
-  const [collections, setCollections] = useState<
-    Record<string, { unlocked: Tip[]; locked: Tip[] }>
-  >({});
+  const [collections, setCollections] = useState<Record<string, { unlocked: Tip[]; locked: Tip[] }>>({});
   const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
+  const history = useHistory();
 
   useEffect(() => {
     const loadData = async () => {
-      const unlockedIds = await getUnlockedTipIds();
-      // Usa TipService para obtener todos los tips
-      const allTips = tipService.getAllTips();
-      const grouped: Record<string, { unlocked: Tip[]; locked: Tip[] }> = {};
-      allTips.forEach((tip) => {
-        const isUnlocked = unlockedIds.includes(tip.id);
-        if (!grouped[tip.collection ?? '']) {
-          grouped[tip.collection ?? ''] = { unlocked: [], locked: [] };
-        }
-        grouped[tip.collection ?? ''][isUnlocked ? 'unlocked' : 'locked'].push(tip);
-      });
-      const filtered = Object.fromEntries(
-        Object.entries(grouped)
-          .filter(([, group]) => group.unlocked.length > 0)
-          .sort(([a], [b]) => a.localeCompare(b))
-      );
-      setCollections(filtered);
+      const grouped = await tipManager.getCollectionsGrouped();
+      setCollections(grouped);
     };
     loadData();
   }, []);
 
   const collectionNames = Object.keys(collections);
-  const history = useHistory();
 
   return (
     <IonPage>
