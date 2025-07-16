@@ -18,31 +18,31 @@ import {
 
 import { useEffect, useState } from 'react';
 import { documentText } from 'ionicons/icons';
-
 import { useHistory } from 'react-router-dom';
-import { getRarityColor, getRarityLabel, getRarityBorderClass, Rarity } from '../utils/tips';
 
+import { getRarityColor, getRarityLabel, getRarityBorderClass } from '../utils/tips';
+import { Tip, Rarity } from '../models/Tip';
+import { TipService } from '../services/TipService';
 
-import tips from '../data/tips.json'; // Asegúrate de tener el archivo
-
+import tipsData from '../data/tips.json';
 import { Preferences } from '@capacitor/preferences';
 
-type Rarity = 'common' | 'uncommon' | 'rare' | 'super_rare' | 'epic';
+// Utiliza el modelo Tip para inicializar los datos
+const initialTips: Tip[] = tipsData.map(tip => ({
+  id: tip.id,
+  title: tip.title ?? tip.text,
+  description: tip.description ?? tip.text,
+  rarity: tip.rarity,
+  unlocked: false,
+  collection: tip.collection,
+}));
 
-type Tip = {
-  id: string;
-  text: string;
-  collection: string;
-  rarity: Rarity;
-};
-
-
+const tipService = new TipService(initialTips);
 
 async function getUnlockedTipIds(): Promise<string[]> {
   const { value } = await Preferences.get({ key: 'handled_tip_id' });
   return value ? JSON.parse(value) : [];
 }
-
 
 const CollectionsPage: React.FC = () => {
   const [collections, setCollections] = useState<
@@ -53,13 +53,15 @@ const CollectionsPage: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       const unlockedIds = await getUnlockedTipIds();
+      // Usa TipService para obtener todos los tips
+      const allTips = tipService.getAllTips();
       const grouped: Record<string, { unlocked: Tip[]; locked: Tip[] }> = {};
-      tips.forEach((tip) => {
+      allTips.forEach((tip) => {
         const isUnlocked = unlockedIds.includes(tip.id);
-        if (!grouped[tip.collection]) {
-          grouped[tip.collection] = { unlocked: [], locked: [] };
+        if (!grouped[tip.collection ?? '']) {
+          grouped[tip.collection ?? ''] = { unlocked: [], locked: [] };
         }
-        grouped[tip.collection][isUnlocked ? 'unlocked' : 'locked'].push(tip);
+        grouped[tip.collection ?? ''][isUnlocked ? 'unlocked' : 'locked'].push(tip);
       });
       const filtered = Object.fromEntries(
         Object.entries(grouped)
@@ -78,9 +80,9 @@ const CollectionsPage: React.FC = () => {
     <IonPage>
       <IonContent className="menu-main">
         <div className="technique-title">
-        <IonText>
+          <IonText>
             <h1>Colecciones Desbloqueadas</h1>
-        </IonText>
+          </IonText>
         </div>
         {!selectedCollection ? (
           <>
@@ -89,19 +91,19 @@ const CollectionsPage: React.FC = () => {
                 {collectionNames.map((name, idx) => (
                   <IonCol size="4" key={name}>
                     <IonCard button onClick={() => setSelectedCollection(name)}>
-                        <IonCardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <IonCardTitle>{name}</IonCardTitle>
-                            <IonText color="medium" style={{ marginLeft: '8px', fontWeight: 'bold' }}>
-                                {collections[name].unlocked.length}/{collections[name].unlocked.length + collections[name].locked.length}
-                            </IonText>
-                        </IonCardHeader>
+                      <IonCardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <IonCardTitle>{name}</IonCardTitle>
+                        <IonText color="medium" style={{ marginLeft: '8px', fontWeight: 'bold' }}>
+                          {collections[name].unlocked.length}/{collections[name].unlocked.length + collections[name].locked.length}
+                        </IonText>
+                      </IonCardHeader>
                     </IonCard>
                   </IonCol>
                 ))}
               </IonRow>
             </IonGrid>
             <IonButton fill="clear" expand="block" onClick={() => history.replace('/mainmenu')}>
-                <IonText color="danger">Menú Principal</IonText>    
+              <IonText color="danger">Menú Principal</IonText>
             </IonButton>
           </>
         ) : (
@@ -114,21 +116,21 @@ const CollectionsPage: React.FC = () => {
                 <IonRow>
                   {[...collections[selectedCollection].unlocked, ...collections[selectedCollection].locked].map((tip, index) => (
                     <IonCol size="6" key={tip.id}>
-                        <IonCard className={`tip-card ${getRarityBorderClass(tip.rarity)}`}>
-                            <IonCardContent className="ion-text-center" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                <IonIcon icon={documentText} size="large" color="light" />
-                                {collections[selectedCollection].unlocked.includes(tip) ? (
-                                    <>
-                                        <IonText className="tip-text" style={{ display: 'block', margin: '8px 0' }}>“{tip.text}”</IonText>
-                                        <IonText className="rarity-label">{tip.collection} - {index + 1}</IonText>
-                                    </>
-                                ) : (
-                                    <div style={{ width: '100%' }}>
-                                        <IonText className="locked-tip" style={{ display: 'block', margin: '8px 0', opacity: 0.5 }}>{tip.collection} - {index + 1}</IonText>
-                                    </div>
-                                )}
-                            </IonCardContent>
-                        </IonCard>
+                      <IonCard className={`tip-card ${getRarityBorderClass(tip.rarity)}`}>
+                        <IonCardContent className="ion-text-center" style={{ minHeight: '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                          <IonIcon icon={documentText} size="large" color="light" />
+                          {collections[selectedCollection].unlocked.includes(tip) ? (
+                            <>
+                              <IonText className="tip-text" style={{ display: 'block', margin: '8px 0' }}>“{tip.description}”</IonText>
+                              <IonText className="rarity-label">Frase - {index + 1}</IonText>
+                            </>
+                          ) : (
+                            <div style={{ width: '100%' }}>
+                              <IonText className="locked-tip" style={{ display: 'block', margin: '8px 0', opacity: 0.5 }}>Frase - {index + 1}</IonText>
+                            </div>
+                          )}
+                        </IonCardContent>
+                      </IonCard>
                     </IonCol>
                   ))}
                 </IonRow>
@@ -137,7 +139,7 @@ const CollectionsPage: React.FC = () => {
                 <IonText color="primary">Volver</IonText>
               </IonButton>
               <IonButton fill="clear" expand="block" onClick={() => history.replace('/mainmenu')}>
-                <IonText color="danger">Menú Principal</IonText>    
+                <IonText color="danger">Menú Principal</IonText>
               </IonButton>
             </IonCardContent>
           </IonCard>

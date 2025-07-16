@@ -1,4 +1,4 @@
-export type Rarity = 'common' | 'uncommon' | 'rare' | 'super_rare' | 'epic';
+import { Rarity } from '../models/Tip';
 
 export function getRarityColor(rarity: Rarity): string {
   switch (rarity) {
