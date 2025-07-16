@@ -114,7 +114,7 @@ const Stats: React.FC = () => {
                         const min = Math.floor(pomodoroStats.totalWorkTime / 60);
                         const h = Math.floor(min / 60);
                         const m = min % 60;
-                        return `${h} h ${m} m`;
+                        return h > 0 ? `${h} h ${m} m` : `${m} m`;
                       })()
                     }
                   </IonLabel>
@@ -126,7 +126,7 @@ const Stats: React.FC = () => {
                         const min = Math.floor(pomodoroStats.totalBreakTime / 60);
                         const h = Math.floor(min / 60);
                         const m = min % 60;
-                        return `${h} h ${m} m`;
+                        return h > 0 ? `${h} h ${m} m` : `${m} m`;
                       })()
                     }
                   </IonLabel>
@@ -164,7 +164,7 @@ const Stats: React.FC = () => {
                         const min = Math.floor(promedio / 60);
                         const h = Math.floor(min / 60);
                         const m = min % 60;
-                        return `${h} h ${m} m`;
+                        return h > 0 ? `${h} h ${m} m` : `${m} m`;
                       })()
                     }
                   </IonLabel>
