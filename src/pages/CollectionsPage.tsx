@@ -20,6 +20,8 @@ import { useEffect, useState } from 'react';
 import { documentText } from 'ionicons/icons';
 
 import { useHistory } from 'react-router-dom';
+import { getRarityColor, getRarityLabel, getRarityBorderClass, Rarity } from '../utils/tips';
+
 
 import tips from '../data/tips.json'; // Asegúrate de tener el archivo
 
@@ -34,43 +36,7 @@ type Tip = {
   rarity: Rarity;
 };
 
-const getRarityColor = (rarity: Rarity): string => {
-  switch (rarity) {
-    case 'common':
-      return 'medium';
-    case 'uncommon':
-      return 'success';
-    case 'rare':
-      return 'primary';
-    case 'super_rare':
-      return 'tertiary';
-    case 'epic':
-      return 'warning'; // puedes personalizar un color especial en theme/variables.css
-    default:
-      return 'medium';
-  }
-};
 
-const getRarityLabel = (rarity: Rarity): string => {
-  switch (rarity) {
-    case 'common':
-      return 'Común';
-    case 'uncommon':
-      return 'Poco común';
-    case 'rare':
-      return 'Raro';
-    case 'super_rare':
-      return 'Súper raro';
-    case 'epic':
-      return 'Épico';
-    default:
-      return '';
-  }
-};
-
-function getRarityBorderClass(rarity: string) {
-  return `border-${rarity}`;
-}
 
 async function getUnlockedTipIds(): Promise<string[]> {
   const { value } = await Preferences.get({ key: 'handled_tip_id' });

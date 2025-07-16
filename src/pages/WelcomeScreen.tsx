@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
 import { getLocalIsoDate } from '../utils/date';
+import { getRarityColor, getRarityLabel, getRarityBorderClass, Rarity } from '../utils/tips';
 
 import tips from '../data/tips.json'; // Asegúrate de tener un archivo JSON con las frases
 
@@ -18,40 +19,6 @@ type Tip = {
   text: string;
   collection: string;
   rarity: Rarity;
-};
-
-const getRarityColor = (rarity: Rarity): string => {
-  switch (rarity) {
-    case 'common':
-      return 'medium';
-    case 'uncommon':
-      return 'success';
-    case 'rare':
-      return 'primary';
-    case 'super_rare':
-      return 'tertiary';
-    case 'epic':
-      return 'warning'; // puedes personalizar un color especial en theme/variables.css
-    default:
-      return 'medium';
-  }
-};
-
-const getRarityLabel = (rarity: Rarity): string => {
-  switch (rarity) {
-    case 'common':
-      return 'Común';
-    case 'uncommon':
-      return 'Poco común';
-    case 'rare':
-      return 'Raro';
-    case 'super_rare':
-      return 'Súper raro';
-    case 'epic':
-      return 'Épico';
-    default:
-      return '';
-  }
 };
 
 const rarityWeights: Record<Rarity, number> = {
