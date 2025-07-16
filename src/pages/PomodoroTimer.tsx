@@ -27,12 +27,6 @@ interface Block {
     minuteIndex: number;
 }
 
-const DURATIONS: Record<SessionType, number> = {
-    work: 25 * 60,
-    short_break: 5 * 60,
-    long_break: 15 * 60,
-};
-
 const LABELS: Record<SessionType, string> = {
     work: 'Trabajo',
     short_break: 'Descanso corto',
@@ -178,6 +172,7 @@ const PomodoroTimer: React.FC = () => {
         // Continuar con la sesión
         const nextIndex = currentIndex + 1;
         if (nextIndex >= plan.length) {
+            // El timer ya está pausado por el useEffect
             alert('🎉 ¡Plan Pomodoro completado!');
             history.replace('/mainmenu');
             return;
@@ -206,9 +201,13 @@ const PomodoroTimer: React.FC = () => {
 
     useEffect(() => {
         if (timeLeft === 0 && isRunning) {
+            const isLastSession = currentIndex === plan.length - 1;
+            if (isLastSession) {
+                setIsRunning(false); // Pausar solo si es la última fase
+            }
             handleNext(); // avanzar automáticamente
         }
-    }, [timeLeft, isRunning, handleNext]);
+    }, [timeLeft, isRunning, handleNext, currentIndex, plan.length]);
 
     if (!plan.length) return null;
 

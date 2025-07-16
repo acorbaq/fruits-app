@@ -36,8 +36,9 @@ const PomodoroSetup: React.FC = () => {
     let workCount = 0;
 
     while (remainingWork > 0) {
-      sessions.push({ type: 'work', duration: workBlock });
-      remainingWork -= workBlock;
+      const blockDuration = remainingWork >= workBlock ? workBlock : remainingWork;
+      sessions.push({ type: 'work', duration: blockDuration });
+      remainingWork -= blockDuration;
       workCount++;
 
       if (remainingWork > 0) {
