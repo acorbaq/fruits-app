@@ -58,6 +58,9 @@ const Stats: React.FC = () => {
     setPomodoroStats(stats);
   };
 
+  const [dateClickCount, setDateClickCount] = useState(0);
+  const [showResetButton, setShowResetButton] = useState(false);
+
   return (
     <IonPage>
       <IonContent fullscreen>
@@ -88,8 +91,17 @@ const Stats: React.FC = () => {
                 </IonLabel>
               </IonItem>
               <IonItem>
-                  <IonLabel>
-                  <strong>Fecha y hora actual:</strong> {getLocalIsoDate()}
+                  <IonLabel
+                    onClick={() => {
+                      setDateClickCount((count) => {
+                        const newCount = count + 1;
+                        if (newCount >= 7) setShowResetButton(true);
+                        return newCount;
+                      });
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong>Fecha actual:</strong> {getLocalIsoDate()}
                   </IonLabel>
                 </IonItem>
             </IonList>
@@ -178,15 +190,17 @@ const Stats: React.FC = () => {
         <IonButton fill="clear" expand="block" onClick={() => history.replace('/mainmenu')}>
             <IonText color="danger">Menú Principal</IonText>
         </IonButton>
-        <IonButton
-          fill="outline"
-          color="warning"
-          expand="block"
-          onClick={handleResetStats}
-          style={{ marginTop: 16, marginBottom: 8 }}
-        >
-          <IonText color="warning">Reiniciar estadísticas</IonText>
-        </IonButton>
+        {showResetButton && (
+          <IonButton
+            fill="outline"
+            color="warning"
+            expand="block"
+            onClick={handleResetStats}
+            style={{ marginTop: 16, marginBottom: 8 }}
+          >
+            <IonText color="warning">Reiniciar estadísticas</IonText>
+          </IonButton>
+        )}
 
       </IonContent>
     </IonPage>
