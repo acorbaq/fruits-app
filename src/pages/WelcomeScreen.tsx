@@ -13,6 +13,8 @@ import { Tip } from '../models/Tip';
 import { TipService } from '../services/TipService';
 import { TipManager } from '../services/TipManager';
 
+import TipCard from '../components/TipCard';
+
 import tipsData from '../data/tips.json';
 
 // Inicializa los tips usando el modelo Tip
@@ -72,12 +74,10 @@ const WelcomeScreen = () => {
   return tip && !expired ? (
     <IonPage>
       <IonContent fullscreen className="tip-screen">
-        <div className={`tip-container ${getRarityBorderClass(tip.rarity)}`} onClick={handleTap}>
-          <IonText className="tip-text">
-            <p>“{tip.description}”</p>
-            <span className={`tip-collection ${getRarityColor(tip.rarity)}`}>
-              {getRarityLabel(tip.rarity)} - {tip.collection}
-            </span>
+        <div onClick={handleTap}>
+          <TipCard tip={tip} />
+          <IonText className="tip-collection">
+            {tip.collection}
           </IonText>
         </div>
       </IonContent>
