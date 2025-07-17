@@ -1,25 +1,39 @@
-import { IonCard, IonCardContent, IonText } from '@ionic/react';
+import { IonPage, IonContent, IonText } from '@ionic/react';
 import { Tip } from '../models/Tip';
-import { getRarityBorderClass, getRarityLabel } from '../utils/tips';
+import { getRarityBorderClass, getRarityLabel, getRarityColor } from '../utils/tips';
+
+import '../theme/variables.css';
 
 interface TipCardProps {
   tip: Tip;
   locked?: boolean;
+  handleTap?: () => void;
 }
 
-const TipCard: React.FC<TipCardProps> = ({ tip, locked = false }) => (
-  <IonCard className={`tip-card ${getRarityBorderClass(tip.rarity)}`}>
-    <IonCardContent className="ion-text-center">
-      {locked ? (
-        <IonText className="locked-tip">{getRarityLabel(tip.rarity)}</IonText>
-      ) : (
-        <>
-          <IonText className="tip-text">“{tip.description}”</IonText>
-          <IonText className="rarity-label">{getRarityLabel(tip.rarity)}</IonText>
-        </>
-      )}
-    </IonCardContent>
-  </IonCard>
+const TipCard: React.FC<TipCardProps> = ({ tip, locked = false, handleTap }) => (
+  <IonPage>
+    <IonContent fullscreen className="tip-screen">
+      <div
+        className={`tip-container ${getRarityBorderClass(tip.rarity)}`}
+        onClick={handleTap}
+      >
+        <IonText className="tip-text">
+          {locked ? (
+            <span className={`tip-collection ${getRarityColor(tip.rarity)}`}>
+              {getRarityLabel(tip.rarity)}
+            </span>
+          ) : (
+            <>
+              <p>“{tip.description}”</p>
+              <span className={`tip-collection ${getRarityColor(tip.rarity)}`}>
+                {getRarityLabel(tip.rarity)} - {tip.collection}
+              </span>
+            </>
+          )}
+        </IonText>
+      </div>
+    </IonContent>
+  </IonPage>
 );
 
 export default TipCard;
