@@ -1,12 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-
 import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
 import routes from './routes';
-
 import { getLocalIsoDate } from './utils/date';
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,27 +22,15 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 import '@ionic/react/css/palettes/dark.system.css';
 
-/* Theme variables */
 import './theme/variables.css';
 
 const STORAGE_KEYS = {
   lastSeenDate: 'last_seen_date',
-  handledTipId: 'handled_tip_id',
-  unlockedCollections: 'unlocked_collections',
-  completedCollections: 'completed_collections',
 };
-//await Preferences.clear(); // Limpiar preferencias al iniciar
 
 setupIonicReact();
 
@@ -58,16 +43,16 @@ const App: React.FC = () => {
       const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
 
       if (lastSeen === today) {
-        setShowWelcome(true); // Ya lo vio hoy
+        setShowWelcome(true);
       } else {
-        setShowWelcome(false); // Mostrar pantalla de bienvenida
+        setShowWelcome(false);
       }
     };
 
     checkIfSeenToday();
   }, []);
 
-  if (showWelcome === null) return null; // puedes mostrar un IonLoading mientras carga
+  if (showWelcome === null) return null;
 
   return (
     <IonApp>
