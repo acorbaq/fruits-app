@@ -1,4 +1,3 @@
-// src/pages/MainMenu.tsx
 import {
   IonPage,
   IonContent,
@@ -14,81 +13,65 @@ import {
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { pieChart, book } from 'ionicons/icons';
-import { getLocalIsoDate } from '../utils/date';
-
-import { Preferences } from '@capacitor/preferences';
-
-// Verificar si la fecha last_seen_date es de hoy
-const STORAGE_KEYS = {
-  lastSeenDate: 'last_seen_date',
-};
-
-const isToday = async () => {
-  const today = getLocalIsoDate();
-  const { value: lastSeen } = await Preferences.get({ key: STORAGE_KEYS.lastSeenDate });
-  return lastSeen === today;
-}
-
-
-
+import { isLastSeenToday } from '../utils/preferences';
 
 const MainMenu: React.FC = () => {
   const history = useHistory();
-  // Si la fecha guardada no es de hoy regresa a la pantalla de bienvenida
-    useEffect(() => {
-        const checkLastSeen = async () => {
-        if (!(await isToday())) {
-            history.replace('/welcome');
-        }
-        };
-        checkLastSeen();
-    }, [history]);
+
+  useEffect(() => {
+    const checkLastSeen = async () => {
+      if (!(await isLastSeenToday())) {
+        history.replace('/welcome');
+      }
+    };
+    checkLastSeen();
+  }, [history]);
 
   const handleTechniqueSelect = (technique: string) => {
-    history.replace(`/technique/${technique}`); // ej: /technique/pomodoro
+    history.replace(`/technique/${technique}`);
   };
 
   return (
     <IonPage>
-    <IonContent fullscreen className="main-menu">
+      <IonContent fullscreen className="main-menu">
         <div className="technique-title">
-        <IonText>
+          <IonText>
             <h1>Selecciona tu Técnica</h1>
-        </IonText>
+          </IonText>
         </div>
 
         <IonGrid>
-        <IonRow class="ion-justify-content-center">
+          <IonRow class="ion-justify-content-center">
             {[
-            { name: 'Pomodoro Clásico', emoji: '🍅', key: 'pomodoro' },
-            { name: 'Flowtime', emoji: '🍌', key: 'flowtime' },
-            // Agrega más técnicas aquí
+              { name: 'Pomodoro Clásico', emoji: '🍅', key: 'pomodoro' },
+              { name: 'Flowtime', emoji: '🍌', key: 'flowtime' },
+              // Agrega más técnicas aquí
             ].map((technique) => (
-            <IonCol size="6" size-md="4" key={technique.key}>
+              <IonCol size="6" size-md="4" key={technique.key}>
                 <div className="technique-card" onClick={() => handleTechniqueSelect(technique.key)}>
-                <span className="technique-emoji">{technique.emoji}</span>
-                <span className="technique-name">{technique.name}</span>
+                  <span className="technique-emoji">{technique.emoji}</span>
+                  <span className="technique-name">{technique.name}</span>
                 </div>
-            </IonCol>
+              </IonCol>
             ))}
-        </IonRow>
+          </IonRow>
 
-        <IonRow class="ion-justify-content-around ion-padding-top">
+          <IonRow class="ion-justify-content-around ion-padding-top">
             <IonCol size="auto">
-            <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/collections')}>
+              <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/collections')}>
                 <IonIcon icon={book} slot="start" />
                 Colecciones
-            </IonButton>
+              </IonButton>
             </IonCol>
             <IonCol size="auto">
-            <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/stats')}>
+              <IonButton fill="clear" className="menu-button" onClick={() => history.replace('/stats')}>
                 <IonIcon icon={pieChart} slot="start" />
                 Estadísticas
-            </IonButton>
+              </IonButton>
             </IonCol>
-        </IonRow>
+          </IonRow>
         </IonGrid>
-    </IonContent>
+      </IonContent>
     </IonPage>
   );
 };
