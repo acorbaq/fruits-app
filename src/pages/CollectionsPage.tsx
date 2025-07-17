@@ -25,6 +25,8 @@ import { Tip } from '../models/Tip';
 import { TipService } from '../services/TipService';
 import { TipManager } from '../services/TipManager';
 
+import CollectionCard from '../components/CollectionCard';
+
 import tipsData from '../data/tips.json';
 
 // Inicializa servicios
@@ -66,16 +68,14 @@ const CollectionsPage: React.FC = () => {
           <>
             <IonGrid>
               <IonRow>
-                {collectionNames.map((name, idx) => (
+                {collectionNames.map((name) => (
                   <IonCol size="4" key={name}>
-                    <IonCard button onClick={() => setSelectedCollection(name)}>
-                      <IonCardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <IonCardTitle>{name}</IonCardTitle>
-                        <IonText color="medium" style={{ marginLeft: '8px', fontWeight: 'bold' }}>
-                          {collections[name].unlocked.length}/{collections[name].unlocked.length + collections[name].locked.length}
-                        </IonText>
-                      </IonCardHeader>
-                    </IonCard>
+                    <CollectionCard
+                      name={name}
+                      unlocked={collections[name].unlocked.length}
+                      total={collections[name].unlocked.length + collections[name].locked.length}
+                      onClick={() => setSelectedCollection(name)}
+                    />
                   </IonCol>
                 ))}
               </IonRow>
