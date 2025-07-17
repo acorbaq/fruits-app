@@ -5,13 +5,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
-import Home from './pages/Home';
-import MainMenu from './pages/MainMenu';
-import WelcomeScreen from './pages/WelcomeScreen';
-import CollectionsPage from './pages/CollectionsPage';
-import Stats from './pages/Stats';
-import PomodoroSetup from './pages/PomodoroSetup';
-import PomodoroTimer from './pages/PomodoroTimer';
+import routes from './routes';
 
 import { getLocalIsoDate } from './utils/date';
 
@@ -78,18 +72,12 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/welcome" component={WelcomeScreen} exact />
-        <Route path="/mainmenu" component={MainMenu} exact />
-        <Route path="/collections" component={CollectionsPage} exact />
-        <Route path="/stats" component={Stats} exact />
-        <Route path="/technique/pomodoro" component={PomodoroSetup} exact />
-        <Route path="/timer" component={PomodoroTimer} exact />
-        <Redirect exact from="/" to={showWelcome ? "/welcome" : "/mainmenu"} />
-      </IonRouterOutlet>
+        <IonRouterOutlet>
+          {routes}
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );
-};
+}
 
 export default App;
